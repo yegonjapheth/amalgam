@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='x.css') }}">
+    <style>
+	footer {
+	    position: sticky;
+	   }
+	textarea {
+	    width: auto;
+	    height: auto;
+	    padding: 10px;
+	}
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+	    <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+            <li><a href="{{ url_for('exams') }}">Exams</a></li>
+            <li><a href="{{ url_for('students') }}">Learners</a></li>
+            <li><a href="{{ url_for('teachers') }}">Teachers</a></li>
+            <li><a href="{{ url_for('parents') }}">Parents</a></li>
+            <li><a href="#">Workers</a></li>
+            <li><a href="{{ url_for('results') }}">Results</a></li>
+            <li><a href="{{ url_for('logout_teacher') }}">Logout</a></li>
+        </ul>
+    </nav>
+
+
+    <main>
+        <section class="contact">
+            <div>
+                <h1>Contact Us</h1>
+                <p>We'd love to hear from you!</p> 
+		<p>Please fill out the form below to send us your feedback or inquiries.</p>
+                <form id="y" action="{{ url_for('contact') }}" method="post">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 - Yegon Japheth</p>
+    </footer>
+</body>
+</html>

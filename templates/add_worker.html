@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Worker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <h1>Add New Worker</h1>
+    <form id="y" action="{{ url_for('add_worker') }}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+<br><br>
+        <label for="id_no">ID No:</label>
+        <input type="number" id="id_no" name="id_no" required>
+<br><br>
+        <label for="phone">Phone No:</label>
+        <input type="text" id="phone" name="phone" required>
+<br><br>
+        <label for="job">Job:</label>
+        <input type="text" id="job" name="job" required>
+<br><br>
+        <input type="submit" value="Add Worker">
+    </form>
+
+</body>
+</html>

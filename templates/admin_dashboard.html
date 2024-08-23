@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='x.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+		<li><a href="{{ url_for('index') }}">Main Home</a></li>
+                <li><a href="{{ url_for('manage_users') }}">Manage Users</a></li>
+		<li><a href="{{ url_for('teachers') }}">View Teachers</a></li>
+                <li><a href="{{ url_for('students') }}">View Learners</a></li>
+                <li><a href="{{ url_for('exams') }}">View Exams</a></li>
+                <li><a href="{{ url_for('parents') }}">View Parents</a></li>
+                <li><a href="#">View Workers</a></li>
+                <li><a href="{{ url_for('results') }}">View Results</a></li>
+                <li><a href="{{ url_for('logout_teacher') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <h2>Welcome, Admin!</h2>
+        <p>Use the links above to manage various aspects of the system.</p>
+    </main>
+    <div>
+	<img src="{{ url_for('static', filename='images/x.png') }}" type="image/jpeg" alt="logo">
+    </div>
+    <footer>
+        <p>&copy; {{ current_year }} School Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

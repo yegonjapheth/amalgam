@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student - School Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+	footer {
+	    position: fixed;
+	}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Edit Student</h1>
+        <nav>
+            <a href="{{ url_for('teachers') }}">Teachers</a>
+            <a href="{{ url_for('students') }}">Learners</a>
+            <a href="{{ url_for('exams') }}">Exams</a>
+            <a href="{{ url_for('scores') }}">Scores</a>
+            <a href="{{ url_for('results') }}">Results</a>
+            <a href="{{ url_for('parents') }}">Parents</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Edit Learner Details</h2>
+        <form action="{{ url_for('edit_student', student_id=student.id) }}" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ student.name }}">
+            <label for="grade">Grade:</label>
+            <input type="text" id="grade" name="grade" value="{{ student.grade }}">
+            <label for="parent_id">Parent:</label>
+            <select id="parent_id" name="parent_id">
+                {% for parent in parents %}
+                    <option value="{{ parent.id }}" {% if parent.id == student.parent_id %}selected{% endif %}>{{ parent.name }}</option>
+                {% endfor %}
+            </select>
+	<br><br><br>
+            <button type="submit">Update Learner</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 School Management System</p>
+    </footer>
+</body>
+</html>

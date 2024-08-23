@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - School Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Parents' Dashboard</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+	    <a href="{{ url_for('teachers') }}">Teachers</a>
+	    <a href="{{ url_for('students') }}">Learners</a>
+	    <a href="{{ url_for('parents') }}">Parents</a>
+	    <a href="{{ url_for('exams') }}">Exams</a>
+	    <a href="{{ url_for('scores') }}">Scores</a>
+	    <a href="{{ url_for('results') }}">Results</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h1>Welcome, {{ parent.name }}</h1>
+
+    <h2>Your Children's Results</h2>
+    {% for student in students %}
+        <h3>{{ student.name }}</h3>
+        <h4>Bar Chart</h4>
+        {{ bar_graphs[student.id]|safe }}
+        <h4>Pie Chart</h4>
+        {{ pie_graphs[student.id]|safe }}
+
+        <h4>Results:</h4>
+     <div>
+	<table>
+	    <tr>
+		<th>Exam</th>
+		<th>Score</th>
+	    </tr>
+	    {% for result in student_results[student.id] %}
+	    <tr>
+		<td>{{ result.exam_name }}</td>
+		<td>{{ result.score }}</td>
+	    </tr>
+	    {% endfor %}
+	</table>
+    </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 School Management System</p>
+    </footer>
+</body>
+</html>

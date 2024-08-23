@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Edit Worker</title>
+    <style>
+	footer {
+	    position: fixed;
+	}
+    </style>
+</head>
+<body>
+    <nav>
+        
+            <a href="{{ url_for('index') }}">Home</a>
+	    <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+            <a href="{{ url_for('exams') }}">Exams</a>
+            <a href="{{ url_for('students') }}">Learners</a>
+            <a href="{{ url_for('teachers') }}">Teachers</a>
+            <a href="{{ url_for('parents') }}">Parents</a>
+            <a href="{{ url_for('workers') }}">Workers</a>
+            <a href="{{ url_for('results') }}">Results</a>
+            <a href="{{ url_for('logout_teacher') }}">Logout</a>
+    </nav>
+
+    <h1>Edit Worker</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form id="y" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ worker.name }}" required>
+        <br><br>
+
+        <label for="id_no">ID No:</label>
+        <input type="number" id="id_no" name="id_no" value="{{ worker.id_no }}" required>
+        <br><br>
+
+        <label for="phone">Phone No:</label>
+        <input type="text" id="phone" name="phone" value="{{ worker.phone }}" required>
+        <br><br>
+
+        <label for="job">Job:</label>
+        <input type="text" id="job" name="job" value="{{ worker.job }}" required>
+        <br><br>
+
+        <button type="submit">Update Worker</button>
+    </form>
+
+<footer>
+        <p>&copy; School Management System</p>
+    </footer>
+</body>
+</html>
