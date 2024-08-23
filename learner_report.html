@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='.css') }}">
+    <title>Learner Report</title>
+    <style>
+	h1 {
+	    text-align: center;
+	    color: blue;
+	}
+	nav {
+	    width: 100vw;
+	    background-color: 4CAF50;
+	    color: #fff;
+	    padding: 5px 10px;
+	    text-align: center;
+	    overflow: auto;
+	    white-space: nowrap;
+	}
+    </style>
+</head>
+<body>
+    <nav>
+	<a href="{{ url_for('index') }}">Home</a>
+	<a href="{{ url_for('learner_results', student_id=student.id) }}">Results</a>
+	<a href="{{ url_for('students') }}">Learners</a>
+    </nav>
+
+    <h1>{{ student.name }}</h1>
+    <p>Grade: {{ student.grade }}</p>
+    <h2>Bar Chart</h2>
+    <div>
+        {{ bar_graph|safe }}
+    </div>
+    <h2>Pie Chart</h2>
+    <div>
+        {{ pie_graph|safe }}
+    </div>
+</body>
+</html>

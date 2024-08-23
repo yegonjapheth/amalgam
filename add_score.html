@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Score - School Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+	footer {
+	    position: fixed;
+	}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Add Score</h1>
+        <nav>
+            <a href="{{ url_for('teachers') }}">Teachers</a>
+            <a href="{{ url_for('students') }}">Learners</a>
+            <a href="{{ url_for('exams') }}">Exams</a>
+            <a href="{{ url_for('scores') }}">Scores</a>
+            <a href="{{ url_for('results') }}">Results</a>
+            <a href="{{ url_for('parents') }}">Parents</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Add New Score</h2>
+        <form action="{{ url_for('add_score') }}" method="POST">
+            <label for="student_id">Learner:</label>
+            <select id="student_id" name="student_id" required>
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.name }}</option>
+                {% endfor %}
+            </select>
+            <label for="exam_id">Exam:</label>
+            <select id="exam_id" name="exam_id" required>
+                {% for exam in exams %}
+                    <option value="{{ exam.id }}">{{ exam.name }}</option>
+                {% endfor %}
+            </select>
+            <label for="score">Score:</label>
+            <input type="number" id="score" name="score" required>
+            <button type="submit">Add Score</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 School Management System</p>
+    </footer>
+</body>
+</html>

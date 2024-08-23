@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .logout {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+    </div>
+    <div class="content">
+        <div class="logout">
+            <a href="{{ url_for('admin_logout') }}">Logout</a>
+        </div>
+        <h2>Welcome, {{ session['admin'] }}!</h2>
+        <p>This is the admin dashboard where you can manage the application.</p>
+        <!-- Add more dashboard content here -->
+    </div>
+</body>
+</html>

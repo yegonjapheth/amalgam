@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Teacher - School Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Edit Teacher</h1>
+        <nav>
+            <a href="{{ url_for('teachers') }}">Teachers</a>
+            <!-- Add other navigation links here -->
+        </nav>
+    </header>
+    <main>
+        <h2>Edit Teacher Details</h2>
+        <form action="{{ url_for('edit_teacher', teacher_id=teacher.id) }}" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ teacher.name }}" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ teacher.email }}" required>
+	    <label for="phone">Phone No:</label>
+	    <input type="text" id="phone" name="phone" value="{{ teacher.phone }}" required>
+	    <label for="password">Password</label>
+	    <input type="password" id="password" name="password" value="{{ teacher.password }}" required>
+            <button type="submit">Update Teacher</button>
+        </form>
+        <form action="{{ url_for('delete_teacher', teacher_id=teacher.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this teacher?');">
+            <button type="submit">Delete Teacher</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 School Management System</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        form div {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <form method="GET" action="{{ url_for('admin_dashboard') }}">
+            <div>
+                <label for="exam">Filter by Exam:</label>
+                <select name="exam" id="exam">
+                    <option value="">All Exams</option>
+                    {% for exam in exams %}
+                    <option value="{{ exam.id }}">{{ exam.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="grade">Filter by Grade:</label>
+                <select name="grade" id="grade">
+                    <option value="">All Grades</option>
+                    {% for grade in grades %}
+                    <option value="{{ grade }}">{{ grade }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="date">Filter by Date:</label>
+                <input type="date" name="date" id="date">
+            </div>
+            <div>
+                <label for="search">Search:</label>
+                <input type="text" name="search" id="search" placeholder="Search by student or exam...">
+            </div>
+            <button type="submit">Apply Filters</button>
+        </form>
+
+        <div class="chart-container">
+            <div id="bar-chart"></div>
+        </div>
+
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script>
+            // Load the bar chart
+            var barChartJson = {{ bar_chart_json | safe }};
+            Plotly.newPlot('bar-chart', JSON.parse(barChartJson));
+        </script>
+    </div>
+</body>
+</html>
