@@ -4603,3 +4603,514 @@
 2024-08-21 23:58:50 DEBUG: ('SELECT "t1"."name" AS "exam_name", AVG("t2"."score") AS "avg_score" FROM "result" AS "t2" INNER JOIN "exam" AS "t1" ON ("t2"."exam_id" = "t1"."id") GROUP BY "t1"."id"', [])
 2024-08-21 23:58:54 INFO: 127.0.0.1 - - [21/Aug/2024 23:58:54] "GET /admin HTTP/1.1" 200 -
 2024-08-21 23:58:59 INFO: 127.0.0.1 - - [21/Aug/2024 23:58:59] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-23 14:48:47 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:48:48 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.181.10.55:5000
+2024-08-23 14:48:48 INFO: [33mPress CTRL+C to quit[0m
+2024-08-23 14:48:48 INFO:  * Restarting with stat
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-23 14:48:54 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:48:54 WARNING:  * Debugger is active!
+2024-08-23 14:48:54 INFO:  * Debugger PIN: 133-018-940
+2024-08-23 14:49:01 INFO: Home page accessed
+2024-08-23 14:49:01 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:01] "GET / HTTP/1.1" 200 -
+2024-08-23 14:49:01 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:01] "GET /static/styles.css HTTP/1.1" 200 -
+2024-08-23 14:49:01 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:01] "GET /static/abc.png HTTP/1.1" 200 -
+2024-08-23 14:49:01 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:01] "GET /favicon.ico HTTP/1.1" 200 -
+2024-08-23 14:49:05 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:05] "[32mGET /admin_dashboard HTTP/1.1[0m" 302 -
+2024-08-23 14:49:05 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:05] "GET /admin_login HTTP/1.1" 200 -
+2024-08-23 14:49:05 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:05] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:12 DEBUG: ('SELECT "t1"."id", "t1"."username", "t1"."phone", "t1"."password" FROM "admin" AS "t1" WHERE ("t1"."phone" = ?) LIMIT ? OFFSET ?', [720271321, 1, 0])
+2024-08-23 14:49:12 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:12] "[32mPOST /admin_login HTTP/1.1[0m" 302 -
+2024-08-23 14:49:12 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:12] "GET /admin_dashboard HTTP/1.1" 200 -
+2024-08-23 14:49:12 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:12] "GET /static/x.css HTTP/1.1" 200 -
+2024-08-23 14:49:12 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:12] "GET /static/images/x.png HTTP/1.1" 200 -
+2024-08-23 14:49:14 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:14] "[32mGET /manage_users HTTP/1.1[0m" 302 -
+2024-08-23 14:49:14 INFO: Home page accessed
+2024-08-23 14:49:14 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:14] "GET / HTTP/1.1" 200 -
+2024-08-23 14:49:14 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:14] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:14 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:14] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:49:18 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:18] "GET /login_teacher HTTP/1.1" 200 -
+2024-08-23 14:49:18 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:18] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:20 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1" WHERE ("t1"."phone" = ?) LIMIT ?', ['0720271321', 1])
+2024-08-23 14:49:21 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:21] "[32mPOST /login_teacher HTTP/1.1[0m" 302 -
+2024-08-23 14:49:21 INFO: Home page accessed
+2024-08-23 14:49:21 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:21] "GET / HTTP/1.1" 200 -
+2024-08-23 14:49:21 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:21] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:21 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:21] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:49:23 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:23] "GET /admin_dashboard HTTP/1.1" 200 -
+2024-08-23 14:49:23 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:23] "[36mGET /static/x.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:23 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:23] "[36mGET /static/images/x.png HTTP/1.1[0m" 304 -
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1"', [])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."id_no", "t1"."phone", "t1"."job" FROM "worker" AS "t1"', [])
+2024-08-23 14:49:24 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 14:49:24 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:24] "GET /manage_users HTTP/1.1" 200 -
+2024-08-23 14:49:24 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:24] "[36mGET /static/x.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1"', [])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."id_no", "t1"."phone", "t1"."job" FROM "worker" AS "t1"', [])
+2024-08-23 14:49:27 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 14:49:27 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:27] "GET /manage_users HTTP/1.1" 200 -
+2024-08-23 14:49:28 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:28] "[36mGET /static/x.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:28 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:28] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 14:49:29 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:29] "GET /admin_dashboard HTTP/1.1" 200 -
+2024-08-23 14:49:29 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:29] "[36mGET /static/x.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:29 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:29] "[36mGET /static/images/x.png HTTP/1.1[0m" 304 -
+2024-08-23 14:49:33 INFO: Home page accessed
+2024-08-23 14:49:33 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:33] "GET / HTTP/1.1" 200 -
+2024-08-23 14:49:33 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:33] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:49:33 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:33] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."student_id", "t1"."exam_id", "t1"."score", "t2"."id", "t2"."name", "t2"."grade", "t2"."parent_id", "t3"."id", "t3"."name", "t3"."date", "t3"."teacher_id" FROM "result" AS "t1" INNER JOIN "student" AS "t2" ON ("t1"."student_id" = "t2"."id") INNER JOIN "exam" AS "t3" ON ("t1"."exam_id" = "t3"."id")', [])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:49:37 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:49:37 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:37] "GET /scores HTTP/1.1" 200 -
+2024-08-23 14:49:37 INFO: 127.0.0.1 - - [23/Aug/2024 14:49:37] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-23 14:51:23 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:51:23 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.181.10.55:5000
+2024-08-23 14:51:23 INFO: [33mPress CTRL+C to quit[0m
+2024-08-23 14:51:23 INFO:  * Restarting with stat
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-23 14:51:29 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-23 14:51:29 WARNING:  * Debugger is active!
+2024-08-23 14:51:29 INFO:  * Debugger PIN: 133-018-940
+2024-08-23 14:51:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 14:51:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 14:51:30 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:30] "GET /students HTTP/1.1" 200 -
+2024-08-23 14:51:30 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:30] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:32 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1"', [])
+2024-08-23 14:51:32 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:32] "GET /teachers HTTP/1.1" 200 -
+2024-08-23 14:51:32 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:32] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 14:51:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 14:51:36 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:36] "GET /students HTTP/1.1" 200 -
+2024-08-23 14:51:36 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:36] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:39 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 14:51:39 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:39] "GET /parents HTTP/1.1" 200 -
+2024-08-23 14:51:39 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:39] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:41 INFO: Home page accessed
+2024-08-23 14:51:41 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:41] "GET / HTTP/1.1" 200 -
+2024-08-23 14:51:41 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:41] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:41 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:41] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:51:43 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:43] "[32mGET /admin_dashboard HTTP/1.1[0m" 302 -
+2024-08-23 14:51:43 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:43] "GET /admin_login HTTP/1.1" 200 -
+2024-08-23 14:51:43 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:43] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:46 DEBUG: ('SELECT "t1"."id", "t1"."username", "t1"."phone", "t1"."password" FROM "admin" AS "t1" WHERE ("t1"."phone" = ?) LIMIT ? OFFSET ?', [720271321, 1, 0])
+2024-08-23 14:51:46 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:46] "[32mPOST /admin_login HTTP/1.1[0m" 302 -
+2024-08-23 14:51:46 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:46] "GET /admin_dashboard HTTP/1.1" 200 -
+2024-08-23 14:51:46 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:46] "[36mGET /static/x.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:46 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:46] "[36mGET /static/images/x.png HTTP/1.1[0m" 304 -
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."student_id", "t1"."exam_id", "t1"."score" FROM "result" AS "t1" INNER JOIN "student" AS "t2" ON ("t1"."student_id" = "t2"."id") INNER JOIN "exam" AS "t3" ON ("t1"."exam_id" = "t3"."id")', [])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [6, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [5, 1, 0])
+2024-08-23 14:51:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."date", "t1"."teacher_id" FROM "exam" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [7, 1, 0])
+2024-08-23 14:51:55 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:55] "GET /results HTTP/1.1" 200 -
+2024-08-23 14:51:55 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:55] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:57 INFO: Home page accessed
+2024-08-23 14:51:57 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:57] "GET / HTTP/1.1" 200 -
+2024-08-23 14:51:57 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:57] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:57 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:57] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:51:58 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:58] "GET /admin_dashboard HTTP/1.1" 200 -
+2024-08-23 14:51:58 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:58] "[36mGET /static/x.css HTTP/1.1[0m" 304 -
+2024-08-23 14:51:58 INFO: 127.0.0.1 - - [23/Aug/2024 14:51:58] "[36mGET /static/images/x.png HTTP/1.1[0m" 304 -
+2024-08-23 14:52:01 INFO: Home page accessed
+2024-08-23 14:52:01 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:01] "GET / HTTP/1.1" 200 -
+2024-08-23 14:52:01 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:01] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:52:01 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:01] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:52:03 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:03] "GET /login_teacher HTTP/1.1" 200 -
+2024-08-23 14:52:03 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:03] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:52:06 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1" WHERE ("t1"."phone" = ?) LIMIT ?', ['0720271321', 1])
+2024-08-23 14:52:06 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:06] "[32mPOST /login_teacher HTTP/1.1[0m" 302 -
+2024-08-23 14:52:06 INFO: Home page accessed
+2024-08-23 14:52:06 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:06] "GET / HTTP/1.1" 200 -
+2024-08-23 14:52:06 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:06] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 14:52:06 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:06] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:52:10 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:10] "GET /about HTTP/1.1" 200 -
+2024-08-23 14:52:10 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:10] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 14:52:10 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:10] "GET /static/about.css HTTP/1.1" 200 -
+2024-08-23 14:52:20 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:20] "GET /contact HTTP/1.1" 200 -
+2024-08-23 14:52:20 INFO: 127.0.0.1 - - [23/Aug/2024 14:52:20] "[36mGET /static/x.css HTTP/1.1[0m" 304 -
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-23 19:59:26 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-23 19:59:26 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://127.0.0.1:5000
+2024-08-23 19:59:26 INFO: [33mPress CTRL+C to quit[0m
+2024-08-23 19:59:26 INFO:  * Restarting with stat
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-23 19:59:32 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-23 19:59:32 WARNING:  * Debugger is active!
+2024-08-23 19:59:32 INFO:  * Debugger PIN: 133-018-940
+2024-08-23 20:00:06 INFO: Home page accessed
+2024-08-23 20:00:07 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:07] "GET / HTTP/1.1" 200 -
+2024-08-23 20:00:08 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:08] "GET /static/styles.css HTTP/1.1" 200 -
+2024-08-23 20:00:08 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:08] "GET /static/abc.png HTTP/1.1" 200 -
+2024-08-23 20:00:08 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:08] "GET /favicon.ico HTTP/1.1" 200 -
+2024-08-23 20:00:24 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:24] "[32mGET /admin_dashboard HTTP/1.1[0m" 302 -
+2024-08-23 20:00:24 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:24] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:00:25 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:25] "GET /admin_login HTTP/1.1" 200 -
+2024-08-23 20:00:25 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:25] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:00:25 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:25] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:00:42 DEBUG: ('SELECT "t1"."id", "t1"."username", "t1"."phone", "t1"."password" FROM "admin" AS "t1" WHERE ("t1"."phone" = ?) LIMIT ? OFFSET ?', [720271321, 1, 0])
+2024-08-23 20:00:43 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:43] "[32mPOST /admin_login HTTP/1.1[0m" 302 -
+2024-08-23 20:00:43 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:43] "GET /admin_dashboard HTTP/1.1" 200 -
+2024-08-23 20:00:43 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:43] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:00:43 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:43] "GET /static/x.css HTTP/1.1" 200 -
+2024-08-23 20:00:43 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:43] "GET /static/images/x.png HTTP/1.1" 200 -
+2024-08-23 20:00:43 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:43] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:00:47 INFO: Home page accessed
+2024-08-23 20:00:47 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:47] "GET / HTTP/1.1" 200 -
+2024-08-23 20:00:47 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:47] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:00:47 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:47] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:00:47 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:47] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 20:00:47 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:47] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:00:50 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:50] "GET /login_teacher HTTP/1.1" 200 -
+2024-08-23 20:00:50 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:50] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:00:50 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:50] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:00:50 INFO: 127.0.0.1 - - [23/Aug/2024 20:00:50] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:01:04 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password", "t1"."is_admin" FROM "teacher" AS "t1" WHERE ("t1"."phone" = ?) LIMIT ?', ['0720271321', 1])
+2024-08-23 20:01:04 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:04] "[32mPOST /login_teacher HTTP/1.1[0m" 302 -
+2024-08-23 20:01:04 INFO: Home page accessed
+2024-08-23 20:01:04 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:04] "GET / HTTP/1.1" 200 -
+2024-08-23 20:01:04 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:04] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:01:04 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:04] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:01:04 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:04] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 20:01:04 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:04] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:01:13 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:13] "[32mGET /wazazi HTTP/1.1[0m" 302 -
+2024-08-23 20:01:13 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:13] "GET /login_parent HTTP/1.1" 200 -
+2024-08-23 20:01:13 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:13] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:01:13 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:13] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:01:13 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:13] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:01:29 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."phone" = ?) LIMIT ?', ['0720271321', 1])
+2024-08-23 20:01:31 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:31] "[32mPOST /login_parent HTTP/1.1[0m" 302 -
+2024-08-23 20:01:31 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:01:31 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."parent_id" = ?)', [2])
+2024-08-23 20:01:31 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:31] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:01:31 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [1])
+2024-08-23 20:01:34 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [2])
+2024-08-23 20:01:34 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [5])
+2024-08-23 20:01:35 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:35] "GET /wazazi HTTP/1.1" 200 -
+2024-08-23 20:01:35 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:35] "GET /static/style.css HTTP/1.1" 200 -
+2024-08-23 20:01:48 INFO: 127.0.0.1 - - [23/Aug/2024 20:01:48] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:17 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:17] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:17 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 20:02:17 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:17 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:17 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 20:02:17 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 20:02:17 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:17 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 20:02:17 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:17] "GET /students HTTP/1.1" 200 -
+2024-08-23 20:02:17 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:17] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:02:17 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:17] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:22 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 20:02:22 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:22] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:22 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 20:02:22 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:22] "GET /students/edit/4 HTTP/1.1" 200 -
+2024-08-23 20:02:22 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:22] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:02:22 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:22] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [4, 1, 0])
+2024-08-23 20:02:26 DEBUG: ('UPDATE "student" SET "name" = ?, "grade" = ?, "parent_id" = ? WHERE ("student"."id" = ?)', ['Melvin Cherotich', 'Grade 4', 2, 4])
+2024-08-23 20:02:26 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:26] "[32mPOST /students/edit/4 HTTP/1.1[0m" 302 -
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:26 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:26] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [1, 1, 0])
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 20:02:26 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:26] "GET /students HTTP/1.1" 200 -
+2024-08-23 20:02:26 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:26] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:02:26 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:26] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 20:02:30 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 20:02:30 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:30] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:30 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:30] "GET /students/edit/3 HTTP/1.1" 200 -
+2024-08-23 20:02:30 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:30] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:02:30 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:30] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [3, 1, 0])
+2024-08-23 20:02:36 DEBUG: ('UPDATE "student" SET "name" = ?, "grade" = ?, "parent_id" = ? WHERE ("student"."id" = ?)', ['Emmanuel Kibet', 'Grade 3', 2, 3])
+2024-08-23 20:02:36 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:36] "[32mPOST /students/edit/3 HTTP/1.1[0m" 302 -
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:36 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:36] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:02:36 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 20:02:36 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:36] "GET /students HTTP/1.1" 200 -
+2024-08-23 20:02:36 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:36] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:02:36 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:36] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:51 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:51] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:51 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 20:02:51 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:51] "GET /parents HTTP/1.1" 200 -
+2024-08-23 20:02:51 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:51] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:02:51 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:51] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:57 INFO: Home page accessed
+2024-08-23 20:02:57 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:57] "GET / HTTP/1.1" 200 -
+2024-08-23 20:02:57 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:57] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:02:57 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:57] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:02:57 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:57] "[36mGET /static/abc.png HTTP/1.1[0m" 304 -
+2024-08-23 20:02:57 INFO: 127.0.0.1 - - [23/Aug/2024 20:02:57] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:00 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:03:00 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE ("t1"."parent_id" = ?)', [2])
+2024-08-23 20:03:00 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:00] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:00 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [1])
+2024-08-23 20:03:00 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [2])
+2024-08-23 20:03:00 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [3])
+2024-08-23 20:03:00 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [4])
+2024-08-23 20:03:00 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [5])
+2024-08-23 20:03:02 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:02] "GET /wazazi HTTP/1.1" 200 -
+2024-08-23 20:03:02 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-08-23 20:03:23 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:23] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:40 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-23 20:03:40 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:03:40 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:40] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:40 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:03:40 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:03:40 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:03:40 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-23 20:03:40 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-23 20:03:40 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:40] "GET /students HTTP/1.1" 200 -
+2024-08-23 20:03:40 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:40] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:03:40 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:40] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:46 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE (("t1"."id" = ?) AND ("t1"."parent_id" = ?)) LIMIT ? OFFSET ?', [1, 2, 1, 0])
+2024-08-23 20:03:46 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:46] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:46 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [1])
+2024-08-23 20:03:46 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:46] "GET /learner_results/1 HTTP/1.1" 200 -
+2024-08-23 20:03:46 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:46] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-23 20:03:46 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:46] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:55 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1" WHERE (("t1"."id" = ?) AND ("t1"."parent_id" = ?)) LIMIT ? OFFSET ?', [1, 2, 1, 0])
+2024-08-23 20:03:55 DEBUG: ('SELECT "t1"."score", "t2"."name" AS "exam_name" FROM "result" AS "t1" INNER JOIN "exam" AS "t2" ON ("t1"."exam_id" = "t2"."id") WHERE ("t1"."student_id" = ?)', [1])
+2024-08-23 20:03:55 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:55] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-23 20:03:56 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:56] "GET /learner_report/1 HTTP/1.1" 200 -
+2024-08-23 20:03:56 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:56] "[33mGET /static/.css HTTP/1.1[0m" 404 -
+2024-08-23 20:04:00 INFO: 127.0.0.1 - - [23/Aug/2024 20:04:00] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -

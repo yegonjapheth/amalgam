@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import secrets
-import smtplib
+import smtplib 
 import statistics
 from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
@@ -185,7 +185,7 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         if "teacher_id" not in session or not is_admin(session["teacher_id"]):
             return redirect(
-                url_for("index")
+                url_for("login_teacher")
             )  # Redirect to a default page or an error page
         return f(*args, **kwargs)
 
@@ -254,6 +254,7 @@ def admin():
     score_distribution_html = score_distribution.to_html(full_html=False)
 
     # Pass the results and visualizations to the template
+    app.logger.info("Admin page accessed")
     return render_template(
         "admin.html",
         results=results,
@@ -277,7 +278,7 @@ def admin_register():
             return redirect(url_for("admin_login"))
         except:
             flash("Username already exists.", "danger")
-
+    app.logger.info("Admin_register page accessed")
     return render_template("admin_register.html")
 
 
@@ -297,7 +298,7 @@ def admin_login():
                 flash("Invalid username or password", "danger")
         except Admin.DoesNotExist:
             flash("Invalid username or password", "danger")
-
+    app.logger.info("Admin_login page accessed")
     return render_template("admin_login.html")
 
 
@@ -306,6 +307,7 @@ def admin_dashboard():
     if "admin" not in session:
         return redirect(url_for("admin_login"))
     admins = Admin.select()
+    app.logger.info("Admin_dashboard page accessed")
     return render_template("admin_dashboard.html", admins=admins)
 
 
@@ -332,7 +334,7 @@ def edit_admin(admin_id):
 
         flash("Admin updated successfully!", "success")
         return redirect(url_for("admin_dashboard"))
-
+    app.logger.info("Edit_admin page accessed")
     return render_template("edit_admin.html", admin=admin)
 
 
@@ -348,6 +350,7 @@ def delete_admin(admin_id):
     else:
         flash("Admin not found!", "danger")
 
+    app.logger.info("Delete_admin page accessed")
     return redirect(url_for("admin_dashboards"))
 
 
@@ -355,6 +358,8 @@ def delete_admin(admin_id):
 def admin_logout():
     session.pop("admin", None)
     flash("You have been logged out.", "info")
+
+    app.logger.info("Admin_logout page accessed")
     return redirect(url_for("admin_login"))
 
 
@@ -382,6 +387,7 @@ def login_teacher():
     else:
         if "teacher_id" in session:
             return redirect(url_for("sms"))
+        app.logger.info("Login_teacher page accessed")
         return render_template("login_teacher.html")
 
 
@@ -398,6 +404,7 @@ def login_parent():
         else:
             return "Invalid credentials", 401
 
+    app.logger.info("Login_parent page accessed")
     return render_template("login_parent.html")
 
 
@@ -429,6 +436,7 @@ def exam_results(exam_id):
     )
     graph_html = fig.to_html(full_html=False)
 
+    app.logger.info("Exam_results page accessed")
     return render_template(
         "exam_results.html",
         exam=exam,
@@ -472,6 +480,7 @@ def export_csv(student_id):
         f"attachment; filename=exam_results_{student.name}.csv"
     )
     output.headers["Content-type"] = "text/csv"
+    app.logger.info("Export_csv page accessed")
     return output
 
 
@@ -536,6 +545,7 @@ def export_pdf(student_id):
     response.headers["Content-Disposition"] = (
         f"attachment; filename=exam_results_{student.name}.pdf"
     )
+    app.logger.info("Export_pdf page accessed")
     return response
 
 
@@ -576,6 +586,7 @@ def contact():
         except Exception as e:
             return f"An error occurred: {e}", 500
 
+    app.logger.info("Contact page accessed")
     return render_template("contact.html")
 
 
@@ -594,6 +605,7 @@ def register():
 
         Parent.create(name=name, email=email, phone=phone, password=hashed_password)
     parent = Parent.select()
+    app.logger.info("Parent_register page accessed")
     return render_template("register.html", parents=parents)
 
 
@@ -608,16 +620,19 @@ def sms():
     if "teacher_id" in session:
         return render_template("base.html")
     else:
+        app.logger.info("SMS page accessed")
         return redirect(url_for("login_teacher"))
 
 
 @app.route("/about", methods=["GET", "POST"])
 def about():
+    app.logger.info("About page accessed")
     return render_template("about.html")
 
 
 @app.route("/services", methods=["GET", "POST"])
 def services():
+    app.logger.info("Services page accessed")
     return render_template("services.html")
 
 
@@ -631,6 +646,7 @@ def forgot_password():
         else:
             return render_template("forgot_password.html", error="Invalid phone number")
     else:
+        app.logger.info("Forgot_password page accessed")
         return render_template("forgot_password.html")
 
 
@@ -645,6 +661,7 @@ def reset_password():
         Teacher.update(password=hashed_password).where(
             Teacher.id == teacher_id
         ).execute()
+        app.logger.info("Reset_password page accessed")
         return redirect(url_for("login_teacher"))
 
 
@@ -660,6 +677,7 @@ def teachers():
         return redirect(url_for("teachers"))
 
     teachers = Teacher.select()
+    app.logger.info("Teachers page accessed")
     return render_template("teachers.html", teachers=teachers)
 
 
@@ -678,6 +696,7 @@ def edit_teacher(teacher_id):
         teacher.save()
         return redirect(url_for("teachers"))
 
+    app.logger.info("Edit_teacher page accessed")
     return render_template("edit_teacher.html", teacher=teacher)
 
 
@@ -687,6 +706,7 @@ def delete_teacher(teacher_id):
     teacher = Teacher.get_or_none(teacher_id)
     if teacher:
         teacher.delete_instance()
+    app.logger.info("Delete_teacher page accessed")
     return redirect(url_for("teachers"))
 
 
@@ -701,6 +721,7 @@ def students():
 
     students = Student.select()
     parents = Parent.select()
+    app.logger.info("Learners page accessed")
     return render_template("students.html", students=students, parents=parents)
 
 
@@ -715,6 +736,7 @@ def edit_student(student_id):
         student.save()
         return redirect(url_for("students"))
     parents = Parent.select()
+    app.logger.info("Edit_learner page accessed")
     return render_template("edit_student.html", student=student, parents=parents)
 
 
@@ -723,6 +745,7 @@ def edit_student(student_id):
 def delete_student(student_id):
     student = Student.get_by_id(student_id)
     student.delete_instance()
+    app.logger.info("Delete_learner page accessed")
     return redirect(url_for("students"))
 
 
@@ -737,6 +760,7 @@ def exams():
 
     exams = Exam.select()
     teachers = Teacher.select()
+    app.logger.info("Exams page accessed")
     return render_template("exams.html", exams=exams, teachers=teachers)
 
 
@@ -757,6 +781,7 @@ def edit_exam(exam_id):
 
     teachers = Teacher.select()
     print(teachers)  # Debugging line
+    app.logger.info("Edit_exam page accessed")
     return render_template("edit_exam.html", exam=exam, teachers=teachers)
 
 
@@ -767,6 +792,7 @@ def delete_exam(exam_id):
     exam = Exam.get_or_none(exam_id)
     if exam:
         exam.delete_instance()
+    app.logger.info("Delete_exam page accessed")
     return redirect(url_for("exams"))
 
 
@@ -780,6 +806,7 @@ def scores():
             .join(Exam, on=(Result.exam == Exam.id))
         )
 
+        app.logger.info("Scores page accessed")
         return render_template("scores.html", results=results)
     except Exception as e:
         return str(e), 500
@@ -802,6 +829,7 @@ def add_score():
     students = Student.select()
     exams = Exam.select()
 
+    app.logger.info("Add_scores page accessed")
     return render_template("add_score.html", students=students, exams=exams)
 
 
@@ -817,6 +845,7 @@ def edit_score(score_id):
         score.save()
         return redirect(url_for("scores"))
 
+    app.logger.info("Edit_score page accessed")
     return render_template("edit_score.html", score=score)
 
 
@@ -827,6 +856,7 @@ def delete_score(score_id):
     score = Result.get_or_none(score_id)
     if score:
         score.delete_instance()
+    app.logger.info("Delete_score page accessed")
     return redirect(url_for("scores"))
 
 
@@ -840,6 +870,7 @@ def results():
 
     results_list = [result for result in query]
 
+    app.logger.info("Results page accessed")
     return render_template("results.html", results=results_list)
 
 
@@ -860,6 +891,7 @@ def edit_result(id):
             print(f"Error: {e}")
             return "An error occurred."
 
+    app.logger.info("Edit_result page accessed")
     return render_template("edit_result.html", result=result)
 
 
@@ -869,12 +901,14 @@ def delete_result(result_id):
     result = Result.get_or_none(result_id)
     if result:
         result.delete_instance()
+    app.logger.info("Delete_result page accessed")
     return redirect(url_for("results"))
 
 
 @app.route("/workers", methods=["GET", "POST"])
 def workers():
     workers = Worker.select()
+    app.logger.info("Workers page accessed")
     return render_template("workers.html", workers=workers)
 
 
@@ -890,6 +924,7 @@ def parents():
         return redirect(url_for("parents"))
 
     parents = Parent.select()
+    app.logger.info("Parents page accessed")
     return render_template("parents.html", parents=parents)
 
 
@@ -908,6 +943,7 @@ def edit_parent(parent_id):
         parent.save()
         return redirect(url_for("parents"))
 
+    app.logger.info("Edit_parent page accessed")
     return render_template("edit_parent.html", parent=parent)
 
 
@@ -918,6 +954,7 @@ def delete_parent(parent_id):
     parent = Parent.get_or_none(parent_id)
     if parent:
         parent.delete_instance()
+    app.logger.info("Delete_parent page accessed")
     return redirect(url_for("parents"))
 
 
@@ -968,6 +1005,7 @@ def wazazi():
             pie_graph_html = pio.to_html(pie_fig, full_html=False)
             pie_graphs[student.id] = pie_graph_html
 
+    app.logger.info("Wazazi page accessed")
     return render_template(
         "dashboard.html",
         parent=parent,
@@ -1013,6 +1051,7 @@ def learner_report(student_id):
     pie_fig.update_layout(title=f"{student.name} (Pie Chart)")
     pie_graph_html = pio.to_html(pie_fig, full_html=False)
 
+    app.logger.info("Learner_report page accessed")
     return render_template(
         "learner_report.html",
         student=student,
@@ -1044,6 +1083,7 @@ def learner_results(student_id):
         .dicts()
     )
 
+    app.logger.info("Learner_results page accessed")
     return render_template("learner_results.html", student=student, results=results)
 
 
@@ -1062,6 +1102,7 @@ def add_worker():
             job=job,
         )
         return redirect(url_for("workers"))
+    app.logger.info("Add_worker page accessed")
     return render_template("add_worker.html")
 
 
@@ -1088,6 +1129,7 @@ def edit_worker(worker_id):
             logging.error(f"Error updating worker: {e}")
             flash("Error updating worker. Please try again.")
 
+    app.logger.info("Edit_worker page accessed")
     return render_template("edit_worker.html", worker=worker)
 
 
@@ -1103,6 +1145,7 @@ def delete_worker(worker_id):
     except Exception as e:
         logging.error(f"Error deleting worker: {e}")
         flash("Error deleting worker. Please try again.")
+    app.logger.info("Delete_worker page accessed")
     return redirect(url_for("workers"))
 
 
@@ -1116,6 +1159,7 @@ def manage_users():
     parents = Parent.select()
     exams = Exam.select()
     results = Result.select()
+    app.logger.info("Manage_users page accessed")
     return render_template(
         "manage_users.html",
         teachers=teachers,
@@ -1142,18 +1186,21 @@ def edits_teacher(teacher_id):
         teacher.save()
         flash("Teacher updated successfully!")
         return redirect(url_for("manage_users"))
+    app.logger.info("Edits_teacher page accessed")
     return render_template("edits_teacher.html", teacher=teacher)
 
 
 @app.route("/logout_teacher")
 def logout_teacher():
     session.pop("teacher_id", None)  # Remove the teacher_id from the session
+    app.logger.info("Logout_teacher page accessed")
     return redirect(url_for("login_teacher"))
 
 
 @app.route("/logout_parent")
 def logout_parent():
     session.pop("parent_id", None)
+    app.logger.info("Logout_parent page accessed")
     return redirect(url_for("login_parent"))
 
 
