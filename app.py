@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import secrets
-import smtplib 
+import smtplib
 import statistics
 from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
