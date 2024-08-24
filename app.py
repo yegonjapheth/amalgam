@@ -45,7 +45,6 @@ from models import (
     Score,
     Student,
     Teacher,
-    User,
     Worker,
     db,
 )
