@@ -1,69 +1,123 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='x.css') }}">
-<title>Our Services</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='x.css') }}">
+    <title>Our Services</title>
+    <style>
+        #d {
+            padding: 5px;
+            display: flex;
+            flex-wrap: wrap; /* Allows items to wrap as needed */
+            justify-content: center;
+        }
+        .z {
+            width: 100vw;
+            max-width: 1200px;
+            height: auto;
+            border: 1px solid #ddd;
+            margin: 5px;
+            padding: 5px;
+            background-color: lightblue;
+        }
+        .flex-container {
+	    background-color: yellow;
+            display: flex;
+            justify-content: space-around; /* Distributes space evenly between items */
+        }
+        .flex-container section {
+            flex: 1; /* Makes each section take equal space */
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .z {
+                width: 100%;
+            }
+            nav ul li {
+                display: block;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-	    <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
-            <li><a href="{{ url_for('exams') }}">Exams</a></li>
-            <li><a href="{{ url_for('students') }}">Learners</a></li>
-            <li><a href="{{ url_for('teachers') }}">Teachers</a></li>
-            <li><a href="{{ url_for('parents') }}">Parents</a></li>
-            <li><a href="{{ url_for('workers') }}">Workers</a></li>
-            <li><a href="{{ url_for('results') }}">Results</a></li>
-            <li><a href="{{ url_for('logout_teacher') }}">Logout</a></li>
-        </ul>
-    </nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+                <li><a href="{{ url_for('exams') }}">Exams</a></li>
+                <li><a href="{{ url_for('students') }}">Learners</a></li>
+                <li><a href="{{ url_for('teachers') }}">Teachers</a></li>
+                <li><a href="{{ url_for('parents') }}">Parents</a></li>
+                <li><a href="{{ url_for('workers') }}">Workers</a></li>
+                <li><a href="{{ url_for('results') }}">Results</a></li>
+                <li><a href="{{ url_for('logout_teacher') }}">Logout</a></li>
+            </ul>
+        </nav>
     </header>
 
-<h2>Here is a list of some of our services</h2>
-<div id="d" style="display: flex; justify-content: center;">
-<div id="add">
-<ul>
-<li>Add Learner</li>
-<li>Add Teacher</li>
-<li>Add Parent</li>
-<li>Add Worker</li>
-<li>Add Exam</li>
-<li>Add Score</li>
-</ul>
-</div>
-<div id="edit">
-<ul>
-<li>Edit Learner</li>
-<li>Edit Teacher</li>
-<li>Edit Parent</li>
-<li>Edit Worker</li>
-<li>Edit Exam</li>
-<li>Edit Score</li>
-</ul>
-</div>
-<div id="delete">
-<ul>
-<li>Delete Learner</li>
-<li>Delete Teacher</li>
-<li>Delete Parent</li>
-<li>Delete Worker</li>
-<li>Delete Exam</li>
-<li>Delete Score</li>
-</ul>
-</div>
-</div>
-<div id="two">
-<nav>
-<ul>
-<li>Learner Result</li>
-<li>Learner Report</li>
-<li>Exam Result</li>
-</ul>
-</nav>
-</div>
+    <main>
+        <h2>Here is a list of some of our services</h2>
+        <div id="d">
+            <div class="z flex-container">
+                <section id="add">
+                    <h3>Add</h3>
+                    <ul>
+                        <li>Add Learner</li>
+                        <li>Add Teacher</li>
+                        <li>Add Parent</li>
+                        <li>Add Worker</li>
+                        <li>Add Exam</li>
+                        <li>Add Score</li>
+                    </ul>
+                </section>
+                <section id="edit">
+                    <h3>Edit</h3>
+                    <ul>
+                        <li>Edit Learner</li>
+                        <li>Edit Teacher</li>
+                        <li>Edit Parent</li>
+                        <li>Edit Worker</li>
+                        <li>Edit Exam</li>
+                        <li>Edit Score</li>
+                    </ul>
+                </section>
+                <section id="delete">
+                    <h3>Delete</h3>
+                    <ul>
+                        <li>Delete Learner</li>
+                        <li>Delete Teacher</li>
+                        <li>Delete Parent</li>
+                        <li>Delete Worker</li>
+                        <li>Delete Exam</li>
+                        <li>Delete Score</li>
+                    </ul>
+                </section>
+            </div>
+            <div id="two" class="z">
+                <nav>
+                    <ul>
+                        <li>Learner Results</li>
+                        <li>Learner Report</li>
+                        <li>Exam Results</li>
+			<li>Download Results</li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

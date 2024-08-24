@@ -1,3 +1,7 @@
+import plotly.graph_objects as go
+from fpdf import FPDF
+from flask import make_response
+import io
 import csv
 import json
 import logging
@@ -10,33 +14,43 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from functools import wraps
 from io import BytesIO, StringIO
-from asgiref.wsgi import WsgiToAsgi
 
 import bcrypt
+import plotly.express as px
 import plotly.graph_objs as go
 import plotly.io as pio
+from asgiref.wsgi import WsgiToAsgi
 from dotenv import load_dotenv
-from peewee import fn
-import plotly.express as px
 from flask import (
     Flask,
+    flash,
     g,
     jsonify,
     make_response,
     redirect,
     render_template,
     request,
+    send_file,
     send_from_directory,
     session,
     url_for,
-    flash,
-    jsonify,
 )
+from flask_login import LoginManager, current_user, login_required
 from flask_wtf import FlaskForm
-from models import Exam, Parent, Result, Score, Student, Teacher, Worker, Admin, db
-from peewee import *
-from peewee import JOIN, DoesNotExist
-from peewee import SqliteDatabase
+from models import (
+    Admin,
+    Exam,
+    Parent,
+    Result,
+    Score,
+    Student,
+    Teacher,
+    User,
+    Worker,
+    db,
+)
+from peewee import CharField, IntegerField, BooleanField
+from peewee import JOIN, DoesNotExist, SqliteDatabase, fn
 from playhouse.shortcuts import model_to_dict
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -48,6 +62,8 @@ from wtforms.validators import DataRequired, Length, NumberRange
 app = Flask(__name__)
 
 app.secret_key = secrets.token_hex(16)
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
 
 logging.basicConfig(
     filename="app.log",
@@ -57,7 +73,8 @@ logging.basicConfig(
 )
 
 db.connect()
-db.create_tables([Parent, Teacher, Student, Exam, Result, Score, Worker, Admin])
+db.create_tables([Parent, Teacher, Student, Exam,
+                 Result, Score, Worker, Admin])
 
 
 @app.before_request
@@ -160,6 +177,11 @@ def calculate_total_score(results):
     return sum(result.result_score for result in results)
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
 def is_admin(teacher_id):
     try:
         teacher = Teacher.get(Teacher.id == teacher_id)
@@ -198,6 +220,106 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/wazazis")
+def wazazis():
+    # Check if 'parent_id' is in the session
+    if "parent_id" not in session:
+        # Redirect to login if not logged in
+        return redirect(url_for("login_parent"))
+
+    # Fetch the parent using 'parent_id' from the session
+    parent_id = session["parent_id"]
+    parent = Parent.get_by_id(parent_id)
+
+    # Fetch the results for the parent's children
+    results = (
+        Result.select(Result, Student, Exam)
+        .join(Student)  # Join Result with Student
+        .switch(Result)  # Switch back to Result
+        .join(Exam)  # Join Result with Exam
+        .where(Student.parent == parent)
+    )  # Filter by parent
+
+    return render_template("wazazi.html", results=results)
+
+@app.route("/download_results/<format>")
+def download_results(format):
+    # Check if 'parent_id' is in the session
+    if "parent_id" not in session:
+        # Redirect to login if not logged in
+        return redirect(url_for("login_parent"))
+
+    # Fetch the parent using 'parent_id' from the session
+    parent_id = session["parent_id"]
+    parent = Parent.get_by_id(parent_id)
+
+    # Fetch the results for the parent's children
+    results = (
+        Result.select(Result, Student, Exam)
+        .join(Student)  # Join Result with Student
+        .switch(Result)  # Switch back to Result
+        .join(Exam)  # Join Result with Exam
+        .where(Student.parent == parent)
+    )  # Filter by parent
+
+    if format == "csv":
+        # Create CSV
+        si = StringIO()
+        cw = csv.writer(si)
+        cw.writerow(["Student Name", "Exam Name", "Score", "Exam Date"])
+        for result in results:
+            cw.writerow([result.student.name, result.exam.name,
+                         result.score, result.exam.date])
+        output = si.getvalue()
+        response = send_file(
+            BytesIO(output.encode("utf-8")),
+            as_attachment=True,
+            download_name="results.csv",
+            mimetype="text/csv",
+        )
+        return response
+
+    elif format == "pdf":
+        # Create PDF
+        pdf = FPDF()
+        pdf.add_page()
+
+        # Set font for the header
+        pdf.set_font("Arial", "B", 12)
+
+        # Set header cells with adjusted column widths
+        pdf.cell(50, 10, "Student Name", border=1)
+        pdf.cell(60, 10, "Exam Name", border=1)
+        pdf.cell(30, 10, "Score", border=1)
+        pdf.cell(40, 10, "Exam Date", border=1)
+        pdf.ln()  # New line after the header row
+
+        # Set font for the body
+        pdf.set_font("Arial", "", 12)
+
+        # Add data rows
+        for result in results:
+            pdf.cell(50, 10, result.student.name, border=1)
+            pdf.cell(60, 10, result.exam.name, border=1)
+            pdf.cell(30, 10, str(result.score), border=1)
+            pdf.cell(40, 10, result.exam.date.strftime("%Y-%m-%d"), border=1)
+            pdf.ln()
+
+        # Write PDF to a BytesIO object
+        pdf_output = BytesIO()
+        pdf_output.write(pdf.output(dest="S").encode("latin1"))
+        pdf_output.seek(0)
+
+        return send_file(
+            pdf_output,
+            as_attachment=True,
+            download_name="results.pdf",
+            mimetype="application/pdf",
+        )
+
+    else:
+        return "Invalid format", 400
+
 @app.route("/admin")
 @login_required
 @admin_required
@@ -228,12 +350,9 @@ def admin():
     # Create bar chart for average scores by exam
     exam_avg_scores = (
         Result.select(
-            Exam.name.alias("exam_name"), fn.AVG(Result.score).alias("avg_score")
-        )
-        .join(Exam)
-        .group_by(Exam.id)
-        .dicts()
-    )
+            Exam.name.alias("exam_name"), fn.AVG(
+                Result.score).alias("avg_score")) .join(Exam) .group_by(
+            Exam.id) .dicts())
 
     exam_avg_chart = px.bar(
         list(exam_avg_scores),
@@ -273,10 +392,13 @@ def admin_register():
 
         try:
             # Save the new admin to the database
-            Admin.create(username=username, phone=phone, password=hashed_password)
+            Admin.create(
+                username=username,
+                phone=phone,
+                password=hashed_password)
             flash("Admin registered successfully!", "success")
             return redirect(url_for("admin_login"))
-        except:
+        except BaseException:
             flash("Username already exists.", "danger")
     app.logger.info("Admin_register page accessed")
     return render_template("admin_register.html")
@@ -432,8 +554,9 @@ def exam_results(exam_id):
         ]
     )
     fig.update_layout(
-        title=f"{exam.name} Results", xaxis_title="Learner Name", yaxis_title="Score"
-    )
+        title=f"{exam.name} Results",
+        xaxis_title="Learner Name",
+        yaxis_title="Score")
     graph_html = fig.to_html(full_html=False)
 
     app.logger.info("Exam_results page accessed")
@@ -601,9 +724,14 @@ def register():
         if not name or not email or not password:
             return "Missing required fields", 400
 
-        hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
+        hashed_password = generate_password_hash(
+            password, method="pbkdf2:sha256")
 
-        Parent.create(name=name, email=email, phone=phone, password=hashed_password)
+        Parent.create(
+            name=name,
+            email=email,
+            phone=phone,
+            password=hashed_password)
     parent = Parent.select()
     app.logger.info("Parent_register page accessed")
     return render_template("register.html", parents=parents)
@@ -644,7 +772,9 @@ def forgot_password():
         if teacher:
             return render_template("reset_password.html", teacher=teacher)
         else:
-            return render_template("forgot_password.html", error="Invalid phone number")
+            return render_template(
+                "forgot_password.html",
+                error="Invalid phone number")
     else:
         app.logger.info("Forgot_password page accessed")
         return render_template("forgot_password.html")
@@ -672,8 +802,13 @@ def teachers():
         email = request.form["email"]
         phone = request.form.get("phone")
         password = request.form.get("password")
-        hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
-        Teacher.create(name=name, email=email, phone=phone, password=hashedpassword)
+        hashed_password = generate_password_hash(
+            password, method="pbkdf2:sha256")
+        Teacher.create(
+            name=name,
+            email=email,
+            phone=phone,
+            password=hashedpassword)
         return redirect(url_for("teachers"))
 
     teachers = Teacher.select()
@@ -737,7 +872,10 @@ def edit_student(student_id):
         return redirect(url_for("students"))
     parents = Parent.select()
     app.logger.info("Edit_learner page accessed")
-    return render_template("edit_student.html", student=student, parents=parents)
+    return render_template(
+        "edit_student.html",
+        student=student,
+        parents=parents)
 
 
 @app.route("/students/delete/<int:student_id>", methods=["GET"])
@@ -919,8 +1057,13 @@ def parents():
         email = request.form["email"]
         phone = request.form.get("phone")
         password = request.form.get("password")
-        hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
-        Parent.create(name=name, email=email, phone=phone, password=hashed_password)
+        hashed_password = generate_password_hash(
+            password, method="pbkdf2:sha256")
+        Parent.create(
+            name=name,
+            email=email,
+            phone=phone,
+            password=hashed_password)
         return redirect(url_for("parents"))
 
     parents = Parent.select()
@@ -956,7 +1099,6 @@ def delete_parent(parent_id):
         parent.delete_instance()
     app.logger.info("Delete_parent page accessed")
     return redirect(url_for("parents"))
-
 
 @app.route("/wazazi")
 def wazazi():
@@ -1000,7 +1142,11 @@ def wazazi():
             bar_graphs[student.id] = bar_graph_html
 
             # Create Pie chart
-            pie_fig = go.Figure(data=[go.Pie(labels=exam_names, values=scores)])
+            pie_fig = go.Figure(
+                data=[
+                    go.Pie(
+                        labels=exam_names,
+                        values=scores)])
             pie_fig.update_layout(title=f"{student.name} - Pie Chart")
             pie_graph_html = pio.to_html(pie_fig, full_html=False)
             pie_graphs[student.id] = pie_graph_html
@@ -1014,7 +1160,6 @@ def wazazi():
         bar_graphs=bar_graphs,
         pie_graphs=pie_graphs,
     )
-
 
 @app.route("/learner_report/<int:student_id>")
 def learner_report(student_id):
@@ -1042,8 +1187,9 @@ def learner_report(student_id):
 
     bar_fig = go.Figure(data=[go.Bar(x=exam_names, y=scores)])
     bar_fig.update_layout(
-        title=f"{student.name} (Bar Chart)", xaxis_title="Exam", yaxis_title="Score"
-    )
+        title=f"{student.name} (Bar Chart)",
+        xaxis_title="Exam",
+        yaxis_title="Score")
     bar_graph_html = pio.to_html(bar_fig, full_html=False)
 
     # Create Pie chart
@@ -1058,7 +1204,6 @@ def learner_report(student_id):
         bar_graph=bar_graph_html,
         pie_graph=pie_graph_html,
     )
-
 
 @app.route("/learner_results/<int:student_id>")
 def learner_results(student_id):
@@ -1084,7 +1229,10 @@ def learner_results(student_id):
     )
 
     app.logger.info("Learner_results page accessed")
-    return render_template("learner_results.html", student=student, results=results)
+    return render_template(
+        "learner_results.html",
+        student=student,
+        results=results)
 
 
 @app.route("/add_worker", methods=["GET", "POST"])

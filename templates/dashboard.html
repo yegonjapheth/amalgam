@@ -16,11 +16,14 @@
 	<h1>Parents Dashboard</h1>
         <nav>
 	    <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('teachers') }}">Teachers</a>
-            <a href="{{ url_for('students') }}">Learners</a>
-            <a href="{{ url_for('exams') }}">Exams</a>
+<!--            <a href="{{ url_for('teachers') }}">Teachers</a>
+-->
+            <a href="{{ url_for('download_results', format='pdf') }}">Download PDF</a>
+	    <a href="{{ url_for('download_results', format='csv') }}">Download CSV</a>
+<!--            <a href="{{ url_for('exams') }}">Exams</a>
             <a href="{{ url_for('results') }}">Results</a>
             <a href="{{ url_for('parents') }}">Parents</a>
+-->
             <a href="{{ url_for('logout_parent') }}">Logout</a>
         </nav>
     </header>
