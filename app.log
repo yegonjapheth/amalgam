@@ -5114,3 +5114,88 @@
 2024-08-23 20:03:56 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:56] "GET /learner_report/1 HTTP/1.1" 200 -
 2024-08-23 20:03:56 INFO: 127.0.0.1 - - [23/Aug/2024 20:03:56] "[33mGET /static/.css HTTP/1.1[0m" 404 -
 2024-08-23 20:04:00 INFO: 127.0.0.1 - - [23/Aug/2024 20:04:00] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-24 22:50:40 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-24 22:51:04 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:51:05 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.229.125.252:5000
+2024-08-24 22:51:05 INFO: [33mPress CTRL+C to quit[0m
+2024-08-24 22:51:05 INFO:  * Restarting with stat
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "admin" ("id" INTEGER NOT NULL PRIMARY KEY, "username" VARCHAR(255) NOT NULL, "phone" INTEGER NOT NULL, "password" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "admin_username" ON "admin" ("username")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "teacher" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL, "is_admin" INTEGER NOT NULL)', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "teacher_email" ON "teacher" ("email")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "exam" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "date" DATE NOT NULL, "teacher_id" INTEGER NOT NULL, FOREIGN KEY ("teacher_id") REFERENCES "teacher" ("id"))', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE INDEX IF NOT EXISTS "exam_teacher_id" ON "exam" ("teacher_id")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "parent" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "email" VARCHAR(255) NOT NULL, "phone" VARCHAR(255), "password" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "parent_email" ON "parent" ("email")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "student" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "grade" VARCHAR(255) NOT NULL, "parent_id" INTEGER NOT NULL, FOREIGN KEY ("parent_id") REFERENCES "parent" ("id"))', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE UNIQUE INDEX IF NOT EXISTS "student_grade" ON "student" ("grade")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE INDEX IF NOT EXISTS "student_parent_id" ON "student" ("parent_id")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "result" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_student_id" ON "result" ("student_id")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE INDEX IF NOT EXISTS "result_exam_id" ON "result" ("exam_id")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "score" ("id" INTEGER NOT NULL PRIMARY KEY, "student_id" INTEGER NOT NULL, "exam_id" INTEGER NOT NULL, "score" INTEGER NOT NULL, FOREIGN KEY ("student_id") REFERENCES "student" ("id"), FOREIGN KEY ("exam_id") REFERENCES "exam" ("id"))', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_student_id" ON "score" ("student_id")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE INDEX IF NOT EXISTS "score_exam_id" ON "score" ("exam_id")', [])
+2024-08-24 22:51:12 DEBUG: ('CREATE TABLE IF NOT EXISTS "worker" ("id" INTEGER NOT NULL PRIMARY KEY, "name" VARCHAR(255) NOT NULL, "id_no" INTEGER NOT NULL, "phone" VARCHAR(255) NOT NULL, "job" VARCHAR(255) NOT NULL)', [])
+2024-08-24 22:51:12 WARNING:  * Debugger is active!
+2024-08-24 22:51:12 INFO:  * Debugger PIN: 295-880-701
+2024-08-24 22:51:19 INFO: Home page accessed
+2024-08-24 22:51:19 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:19] "GET / HTTP/1.1" 200 -
+2024-08-24 22:51:20 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:20] "GET /static/styles.css HTTP/1.1" 200 -
+2024-08-24 22:51:20 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:20] "GET /static/abc.png HTTP/1.1" 200 -
+2024-08-24 22:51:21 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:21] "GET /favicon.ico HTTP/1.1" 200 -
+2024-08-24 22:51:26 INFO: Learners page accessed
+2024-08-24 22:51:26 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:26] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-24 22:51:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."grade", "t1"."parent_id" FROM "student" AS "t1"', [])
+2024-08-24 22:51:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-24 22:51:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-24 22:51:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-24 22:51:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-24 22:51:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1" WHERE ("t1"."id" = ?) LIMIT ? OFFSET ?', [2, 1, 0])
+2024-08-24 22:51:26 DEBUG: ('SELECT "t1"."id", "t1"."name", "t1"."email", "t1"."phone", "t1"."password" FROM "parent" AS "t1"', [])
+2024-08-24 22:51:26 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:26] "GET /students HTTP/1.1" 200 -
+2024-08-24 22:51:26 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:26] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-24 22:51:26 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:26] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-24 22:51:30 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:30] "[32mGET /export_pdf/5 HTTP/1.1[0m" 302 -
+2024-08-24 22:51:30 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:30] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2024-08-24 22:51:30 INFO: Login_teacher page accessed
+2024-08-24 22:51:30 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:30] "GET /login_teacher HTTP/1.1" 200 -
+2024-08-24 22:51:30 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:30] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2024-08-24 22:51:30 INFO: 127.0.0.1 - - [24/Aug/2024 22:51:30] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
